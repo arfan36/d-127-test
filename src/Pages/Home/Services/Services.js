@@ -2,43 +2,43 @@ import React from 'react';
 import fluoride from '../../../assets/images/fluoride.png';
 import cavity from '../../../assets/images/cavity.png';
 import whitening from '../../../assets/images/whitening.png';
-import ServiceCard from './ServiceCard';
+import Service from './Service';
 
 const Services = () => {
 
-    const serviceCard = [
+    const servicesData = [
         {
             id: 1,
             name: 'Fluoride Treatment',
-            description: 'Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi.',
-            icon: fluoride,
+            description: 'Lorem Ipsum is simply dummy printing and typesetting indust Ipsum has been the',
+            img: fluoride,
         },
         {
             id: 2,
             name: 'Cavity Filling',
-            description: 'Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi.',
-            icon: cavity,
+            description: 'Lorem Ipsum is simply dummy printing and typesetting indust Ipsum has been the',
+            img: cavity,
         },
         {
             id: 3,
             name: 'Teeth Whitening',
-            description: 'Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi.',
-            icon: whitening,
+            description: 'Lorem Ipsum is simply dummy printing and typesetting indust Ipsum has been the',
+            img: whitening,
         },
     ];;
 
     return (
-        <div>
+        <div className='mt-16'>
             <div className='text-center'>
-                <h3 className='text-xl'>Our Services</h3>
+                <h3 className='text-xl font-bold text-primary uppercase'>Our Services</h3>
                 <h2 className='text-3xl'>Service We Provide</h2>
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
                 {
-                    serviceCard.map(service => <ServiceCard
+                    servicesData.map(service => <Service
                         key={service.id}
                         service={service}
-                    ></ServiceCard>)
+                    ></Service>)
                 }
             </div>
         </div>
