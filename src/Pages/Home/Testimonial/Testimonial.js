@@ -3,50 +3,50 @@ import quote from '../../../assets/icons/quote.svg';
 import people1 from '../../../assets/images/people1.png';
 import people2 from '../../../assets/images/people2.png';
 import people3 from '../../../assets/images/people3.png';
-import PatientReview from './PatientReview';
+import Review from './Review';
 
 const Testimonial = () => {
 
-    const patientReviewData = [
+    const reviews = [
         {
-            id: 1,
-            patientImg: people1,
-            patientName: 'Wilson Herry',
-            patientAddress: 'California',
-            patientReview: 'It is a long established fact that by the readable content of a lot layout. The point of using Lorem a more-or-less normal distribution to using Content here, content'
+            _id: 1,
+            name: 'Wilson Herry',
+            img: people1,
+            review: 'It is a long established fact that by the readable content of a lot layout. The point of using Lorem a more-or-less normal distribution to using Content here, content',
+            location: 'California',
         },
         {
-            id: 2,
-            patientImg: people2,
-            patientName: 'Wilson Herry',
-            patientAddress: 'California',
-            patientReview: 'It is a long established fact that by the readable content of a lot layout. The point of using Lorem a more-or-less normal distribution to using Content here, content'
+            _id: 2,
+            name: 'Wilson Herry',
+            img: people2,
+            review: 'It is a long established fact that by the readable content of a lot layout. The point of using Lorem a more-or-less normal distribution to using Content here, content',
+            location: 'California',
         },
         {
-            id: 3,
-            patientImg: people3,
-            patientName: 'Wilson Herry',
-            patientAddress: 'California',
-            patientReview: 'It is a long established fact that by the readable content of a lot layout. The point of using Lorem a more-or-less normal distribution to using Content here, content'
+            _id: 3,
+            name: 'Wilson Herry',
+            img: people3,
+            review: 'It is a long established fact that by the readable content of a lot layout. The point of using Lorem a more-or-less normal distribution to using Content here, content',
+            location: 'California',
         },
     ];
 
 
     return (
-        <section className='mt-20 flex flex-col'>
-            <div className="flex justify-between items-center flex-col lg:flex-row-reverse">
-                <img src={quote} className="max-w-sm rounded-lg" alt='' />
+        <section className='my-16 flex flex-col'>
+            <div className="flex justify-between items-center">
                 <div>
-                    <h2 className='text-xl text-primary font-bold'>Testimonial</h2>
-                    <h1 className="text-4xl font-bold">What Our Patients Says</h1>
+                    <h4 className='text-xl text-primary font-bold'>Testimonial</h4>
+                    <h2 className="text-4xl font-bold">What Our Patients Says</h2>
                 </div>
+                <figure><img src={quote} className="w-24 lg:w-48 rounded-lg" alt='' /></figure>
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-14'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                 {
-                    patientReviewData.map(review => <PatientReview
-                        key={review.id}
+                    reviews.map(review => <Review
+                        key={review._id}
                         review={review}
-                    ></PatientReview>)
+                    ></Review>)
                 }
             </div>
         </section>
