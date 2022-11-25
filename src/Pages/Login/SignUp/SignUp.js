@@ -1,19 +1,35 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 
 const SignUp = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { createUser } = useContext(AuthContext);
+    const { createUser, updateUser } = useContext(AuthContext);
+    const [signUpError, setSignUpError] = useState('');
+
     const handleSignUp = (data) => {
         console.log(data);
-        const { email, password } = data;
+        const { name, email, password } = data;
+        setSignUpError('');
         createUser(email, password).then((result) => {
             const user = result.user;
             console.log("🚀 ~ user", user);
+            toast.success('User Created Successfully');
+            const userInfo = {
+                displayName: name
+            };
+            // update user info
+            updateUser(userInfo).then(() => {
+                toast.success('user info updated Successfully');
+            }).catch((err) => {
+                console.error('err', err);
+                setSignUpError(err.message);
+            });
         }).catch((err) => {
             console.error('err', err);
+            setSignUpError(err.message);
         });
     };
 
@@ -55,6 +71,9 @@ const SignUp = () => {
                         {errors.password && <p className='text-error'>{errors.password.message}</p>}
                     </div>
                     <input className='btn btn-accent w-full' value={'SignUp'} type="submit" />
+                    {
+                        signUpError && <p className='text-error'>{signUpError}</p>
+                    }
                 </form>
                 <p>Already have a Account? Please <Link className='text-secondary' to={'/login'}>login</Link></p>
                 <div className="divider">OR</div>
