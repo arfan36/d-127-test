@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../contexts/AuthProvider';
 
 const SignUp = () => {
-
     const { register, handleSubmit, formState: { errors } } = useForm();
-
+    const { createUser } = useContext(AuthContext);
     const handleSignUp = (data) => {
         console.log(data);
-        console.log(errors);
+        const { email, password } = data;
+        createUser(email, password).then((result) => {
+            const user = result.user;
+            console.log("🚀 ~ user", user);
+        }).catch((err) => {
+            console.error('err', err);
+        });
     };
 
     return (
@@ -43,7 +49,7 @@ const SignUp = () => {
                             minLength: { value: 6, message: "Password must be 6 character" },
                             pattern: {
                                 value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/,
-                                message: "Password must be strong"
+                                message: "Password must have uppercase, number and special character"
                             }
                         })} className="input input-bordered w-full max-w-xs" />
                         {errors.password && <p className='text-error'>{errors.password.message}</p>}
