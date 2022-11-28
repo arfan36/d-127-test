@@ -23,8 +23,9 @@ const SignUp = () => {
             };
             // update user info
             updateUser(userInfo).then(() => {
-                navigate('/');
                 toast.success('user info updated Successfully');
+                // save user info
+                saveUser(name, email);
             }).catch((err) => {
                 console.error('err', err);
                 setSignUpError(err.message);
@@ -34,6 +35,27 @@ const SignUp = () => {
             setSignUpError(err.message);
         });
     };
+
+    // save user info function
+    const saveUser = (name, email) => {
+        const user = { name, email };
+        fetch(`http://localhost:5000/users`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log('saveUser', data);
+                navigate('/');
+                if (data.acknowledged) {
+                }
+            })
+            .catch(err => console.error('err', err));
+    };
+
 
     return (
         <div className='h-[800px] flex justify-center items-center'>
