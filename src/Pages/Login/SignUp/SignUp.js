@@ -48,9 +48,21 @@ const SignUp = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log('saveUser', data);
-                navigate('/');
-                if (data.acknowledged) {
+                getUserToken(email);
+                // if (data.acknowledged) {
+                // }
+            })
+            .catch(err => console.error('err', err));
+    };
+
+    const getUserToken = (email) => {
+        fetch(`http://localhost:5000/jwt?email=${email}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.accessToken) {
+                    localStorage.setItem('accessToken', data.accessToken);
+                    toast.success('token add to local storage');
+                    navigate('/');
                 }
             })
             .catch(err => console.error('err', err));
