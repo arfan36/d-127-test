@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider';
 
@@ -20,12 +21,28 @@ const Login = () => {
         signIn(email, password).then((result) => {
             const user = result.user;
             console.log("🚀 ~ user", user);
-            navigate(from, { replace: true });
+
+            // get user token
+            getUserToken(email);
         }).catch((err) => {
             console.error('err', err.message);
             setLoginError(err.message);
         });
     };
+
+    const getUserToken = (email) => {
+        fetch(`http://localhost:5000/jwt?email=${email}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.accessToken) {
+                    localStorage.setItem('accessToken', data.accessToken);
+                    toast.success('token add to local storage');
+                    navigate(from, { replace: true });
+                }
+            })
+            .catch(err => console.error('err', err));
+    };
+
 
     return (
         <div className='h-[800px] flex justify-center items-center'>
