@@ -25,7 +25,7 @@ const SignUp = () => {
             updateUser(userInfo).then(() => {
                 toast.success('user info updated Successfully');
                 // save user info
-                saveUser(name, email);
+                saveUser(name, email, password);
             }).catch((err) => {
                 console.error('err', err);
                 setSignUpError(err.message);
@@ -37,8 +37,8 @@ const SignUp = () => {
     };
 
     // save user info function
-    const saveUser = (name, email) => {
-        const user = { name, email };
+    const saveUser = (name, email, password) => {
+        const user = { name, email, password };
         fetch(`http://localhost:5000/users`, {
             method: 'POST',
             headers: {
