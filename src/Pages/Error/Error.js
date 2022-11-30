@@ -1,11 +1,13 @@
 import React from 'react';
 import { useRouteError } from 'react-router-dom';
+import Navbar from '../Shared/Navbar/Navbar';
 
 const Error = () => {
     const error = useRouteError();
     return (
         <div className='text-center'>
-            <h1>Oh no! An Error Found</h1>
+            <Navbar></Navbar>
+            <h1 className='text-2xl font-bold'>Oh no! An Error Found</h1>
             <br />
             {
                 error && (

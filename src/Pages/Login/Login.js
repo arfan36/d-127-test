@@ -3,15 +3,22 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider';
+import useToken from '../../hooks/useToken';
 
 const Login = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
     const { signIn } = useContext(AuthContext);
     const [loginError, setLoginError] = useState('');
+    const [loginUserEmail, set_loginUserEmail] = useState('');
+    const [token] = useToken(loginUserEmail);
     const location = useLocation();
     const navigate = useNavigate();
 
     const from = location.state?.from?.pathname || '/';
+
+    if (token) {
+        navigate(from, { replace: true });
+    }
 
     const handleLogin = (data) => {
         console.log(data);
@@ -23,25 +30,26 @@ const Login = () => {
             console.log("🚀 ~ user", user);
 
             // get user token
-            getUserToken(email);
+            set_loginUserEmail(email);
+
         }).catch((err) => {
             console.error('err', err.message);
             setLoginError(err.message);
         });
     };
 
-    const getUserToken = (email) => {
-        fetch(`http://localhost:5000/jwt?email=${email}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.accessToken) {
-                    localStorage.setItem('accessToken', data.accessToken);
-                    toast.success('token add to local storage');
-                    navigate(from, { replace: true });
-                }
-            })
-            .catch(err => console.error('err', err));
-    };
+    // const getUserToken = (email) => {
+    //     fetch(`http://localhost:5000/jwt?email=${email}`)
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             if (data.accessToken) {
+    //                 localStorage.setItem('accessToken', data.accessToken);
+    //                 toast.success('token add to local storage');
+    //                 navigate(from, { replace: true });
+    //             }
+    //         })
+    //         .catch(err => console.error('err', err));
+    // };
 
 
     return (
