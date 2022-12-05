@@ -38,7 +38,8 @@ const MyAppointment = () => {
                     <tbody>
                         {/* <!-- row 1 --> */}
                         {
-                            bookings.map((booking, i) =>
+                            bookings?.length > 0 &&
+                            bookings?.map((booking, i) =>
                                 <tr
                                     key={booking._id}
                                 >
