@@ -2,12 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import Loading from '../../Shared/Loading/Loading';
 
 const AddDoctor = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const imageHostKey = process.env.REACT_APP_imgBB_key;
+
+    const navigate = useNavigate();
 
     const { data: specialties, isLoading } = useQuery({
         queryKey: ['specialty'],
@@ -19,6 +22,7 @@ const AddDoctor = () => {
     });
 
     const handleAddDoctor = (data) => {
+        const { name, email, specialty } = data;
         const image = data.image[0];
         const formData = new FormData();
         formData.append('image', image);
@@ -32,34 +36,30 @@ const AddDoctor = () => {
                 console.log(imgData);
                 if (imgData.success) {
 
-                    // toast.custom((t) => (
-                    //     <div
-                    //         className={`${t.visible ? 'animate-enter' : 'animate-leave'
-                    //             } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
-                    //     >
-                    //         <div className="flex-1 w-0 p-4">
-                    //             <div className="flex items-start">
-                    //                 <div className="flex-shrink-0 pt-0.5">
-                    //                     <img
-                    //                         className="h-64 rounded-xl"
-                    //                         src={imgData.data.url}
-                    //                         alt="Pic"
-                    //                     />
-                    //                 </div>
-                    //             </div>
-                    //         </div>
-                    //         <div className="flex border-l border-gray-200">
-                    //             <button
-                    //                 onClick={() => toast.dismiss(t.id)}
-                    //                 className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    //             >
-                    //                 Close
-                    //             </button>
-                    //         </div>
-                    //     </div>
-                    // ));
-
                     console.log("🚀 ~ imgData.data.url", imgData.data.url);
+                    const doctor = {
+                        name,
+                        email,
+                        specialty,
+                        image: imgData.data.url
+                    };
+
+                    // save doctor information to the database
+                    fetch(`http://localhost:5000/doctors`, {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                            authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                        },
+                        body: JSON.stringify(doctor)
+                    })
+                        .then(res => res.json())
+                        .then(result => {
+                            console.log(result);
+                            toast.success(`${name} is added successfully`);
+                            navigate('/dashboard/manage-doctors');
+                        })
+                        .catch(err => console.error('err', err));
                 }
             })
             .catch(err => console.error('err', err));
@@ -116,9 +116,11 @@ const AddDoctor = () => {
                     <label className="label">
                         <span className="label-text">Photo</span>
                     </label>
-                    <input type="file" {...register("image", {
-                        required: "Photo is required"
-                    })} className="input w-full max-w-xs" />
+                    <input type="file"
+                        {...register("image", {
+                            required: "Photo is required"
+                        })}
+                        className="input w-full max-w-xs" />
                     {errors.image && <p className='text-error'>{errors.image.message}</p>}
                 </div>
                 <input className='btn btn-accent w-full mt-3' value={'Add Doctor'} type="submit" />
