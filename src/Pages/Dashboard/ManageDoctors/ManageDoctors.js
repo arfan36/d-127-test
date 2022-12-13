@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import { toast } from 'react-hot-toast';
 import Loading from '../../Shared/Loading/Loading';
 
 const ManageDoctors = () => {
 
-    const { data: doctors, isLoading } = useQuery({
+    const { data: doctors, isLoading, refetch } = useQuery({
         queryKey: ['doctor'],
         queryFn: async () => {
             try {
@@ -24,6 +25,22 @@ const ManageDoctors = () => {
     if (isLoading) {
         return <Loading></Loading>;
     }
+
+    const handleDoctor = (id, name, email, refetch) => {
+        const result = window.confirm(`Are you sure to delete?   Name: ${name}, Email: ${email}`);
+        if (result) {
+            fetch(`http://localhost:5000/doctors/${id}`, {
+                method: 'DELETE',
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    toast.success('successfully deleted');
+                    refetch();
+                })
+                .catch(err => console.error('err', err));
+        }
+    };
 
     return (
         <div>
@@ -56,7 +73,7 @@ const ManageDoctors = () => {
                                 <td>{doctor.name}</td>
                                 <td>{doctor.email}</td>
                                 <td>{doctor.specialty}</td>
-                                <td><button className='btn btn-sm btn-error'>Delete</button></td>
+                                <td><button onClick={() => handleDoctor(doctor._id, doctor.name, doctor.email, refetch)} className='btn btn-sm btn-error'>Delete</button></td>
                             </tr>)
                         }
                     </tbody>
