@@ -7,10 +7,10 @@ import AllUsers from "../../Pages/Dashboard/AllUsers/AllUsers";
 import ManageDoctors from "../../Pages/Dashboard/ManageDoctors/ManageDoctors";
 import MyAppointment from "../../Pages/Dashboard/MyAppointment/MyAppointment";
 import Payment from "../../Pages/Dashboard/Payment/Payment";
-import Error from "../../Pages/Error/Error";
 import Home from "../../Pages/Home/Home/Home";
 import Login from "../../Pages/Login/Login";
 import SignUp from "../../Pages/Login/SignUp/SignUp";
+import DisplayError from "../../Pages/Shared/DisplayError/DisplayError";
 import AdminRoute from "../AdminRoute/AdminRoute";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         element: <Main></Main>,
-        errorElement: <Error></Error>,
+        errorElement: <DisplayError></DisplayError>,
         children: [
             {
                 path: '/',
@@ -43,6 +43,7 @@ const router = createBrowserRouter([
         element: <PrivateRoute>
             <DashboardLayout></DashboardLayout>
         </PrivateRoute>,
+        errorElement: <DisplayError></DisplayError>,
         children: [
             {
                 path: '/dashboard',
