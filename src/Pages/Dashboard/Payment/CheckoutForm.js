@@ -2,8 +2,11 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useEffect, useState } from 'react';
 
 const CheckoutForm = ({ booking }) => {
-    const [cardError, setCardError] = useState('');
-    const [clientSecret, setClientSecret] = useState("");
+    const [cardError, set_cardError] = useState('');
+    const [success, set_success] = useState('');
+    const [processing, set_processing] = useState(false);
+    const [transactionId, set_transactionId] = useState('');
+    const [clientSecret, set_clientSecret] = useState("");
     const stripe = useStripe();
     const elements = useElements();
     const { price, email, patient } = booking;
@@ -19,7 +22,7 @@ const CheckoutForm = ({ booking }) => {
             body: JSON.stringify({ price }),
         })
             .then((res) => res.json())
-            .then((data) => setClientSecret(data.clientSecret));
+            .then((data) => set_clientSecret(data.clientSecret));
     }, [price]);
 
     const handleSubmit = async (event) => {
@@ -40,13 +43,15 @@ const CheckoutForm = ({ booking }) => {
 
         if (error) {
             console.error('error', error);
-            setCardError(error.message);
+            set_cardError(error.message);
         }
         else {
-            setCardError('');
+            set_cardError('');
         }
 
-        const { paymentIntent, error: confimError } = await stripe.confirmCardPayment(
+        set_success('');
+        set_processing(true);
+        const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(
             clientSecret,
             {
                 payment_method: {
@@ -58,7 +63,18 @@ const CheckoutForm = ({ booking }) => {
                 }
             }
         );
+        if (confirmError) {
+            set_cardError(confirmError.message);
+            return;
+        }
+        if (paymentIntent.status === "succeeded") {
+            set_success('Congrats! Your payment completed');
+            set_transactionId(paymentIntent.id);
 
+            // ─── Store Payment Info In The Database ──────────────
+
+        }
+        set_processing(false);
     };
 
     return (
@@ -83,12 +99,18 @@ const CheckoutForm = ({ booking }) => {
                 <button
                     className='btn btn-sm mt-4 btn-primary'
                     type="submit"
-                    disabled={!stripe || !clientSecret}
+                    disabled={!stripe || !clientSecret || processing}
                 >
                     Pay
                 </button>
             </form>
             <p className="text-red-500">{cardError}</p>
+            {
+                success && <div>
+                    <p className='text-green-500'>{success}</p>
+                    <p>Your transactionId: <span className='font-bold'>{transactionId}</span></p>
+                </div>
+            }
         </>
     );
 };
