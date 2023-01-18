@@ -5,7 +5,7 @@ export default function useAdmin(email) {
     const [isAdminLoading, set_isAdminLoading] = useState(true);
     useEffect(() => {
         if (email) {
-            fetch(`https://d-127-1-m-76-doctors-portal-server-nov-18.vercel.app/users/admin/${email}`)
+            fetch(`http://localhost:5000/users/admin/${email}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
